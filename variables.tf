@@ -40,18 +40,38 @@ variable "tags" {
 
 variable "static_site" {
   description = "Define the configuration static site"
-  type        = map(any)
+  type = object({
+    key                     = string
+    suffix                  = string
+    key_prefix_equals       = string
+    replace_key_prefix_with = string
+  })
   default     = null
 }
 
 variable "cors_rules" {
   description = "Define the cors rules to buckes"
-  # type = list(any)
+  type = list(object({
+    allowed_methods = list(string)
+    allowed_origins = list(string)
+    allowed_headers = optional(list(string))
+    expose_headers = optional(list(string))
+    max_age_seconds = optional(number, null) # opcional setar um número, senão por default será null
+  }))
   default = null
 }
 
 variable "bucket_lifecycles" {
   description = "Define the configurations lifecicles to bucket"
-  # type = map(any)
+  type = list(object({
+    id_name = string
+    status = string
+    filter = optional(string)
+    data_expiration = optional(number)
+    versions_transitions = optional(list(object({
+      after_days = number
+      move_to    = string
+    })))
+  }))
   default = null
 }

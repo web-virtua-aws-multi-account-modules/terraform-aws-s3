@@ -8,7 +8,7 @@
 * Create file versions.tf with the exemple code below:
 ```hcl
 terraform {
-  required_version = ">= 0.13.1"
+  required_version = ">= 1.1.3"
 
   required_providers {
     aws = {
@@ -126,9 +126,16 @@ module "bucket_lifecycle_test" {
 * Model of variable static_site
 ```hcl
 variable "static_site" {
+  description = "Define configuration bucket to static site"
+  type = object({
+    key                     = string
+    suffix                  = string
+    key_prefix_equals       = string
+    replace_key_prefix_with = string
+  })
   default = {
-    suffix                  = "index.html"
     key                     = "index.html"
+    suffix                  = "index.html"
     key_prefix_equals       = "/"
     replace_key_prefix_with = "/"
   }
@@ -138,26 +145,46 @@ variable "static_site" {
 * Model of variable cors_rules
 ```hcl
 variable "cors_rules" {
-  default = {
-    rule1 = {
+  description = "Define the cors rules to buckes"
+  type = list(object({
+    allowed_methods = list(string)
+    allowed_origins = list(string)
+    allowed_headers = optional(list(string))
+    expose_headers  = optional(list(string))
+    max_age_seconds = optional(number, null) # opcional setar um número, senão por default será null
+  }))
+  default = [
+    {
       allowed_headers = ["*"]
       allowed_methods = ["PUT", "POST"]
       allowed_origins = ["https://s3-website-test.hashicorp.com"]
       expose_headers  = ["ETag"]
       max_age_seconds = 3000
     },
-    rule2 = {
+    {
       allowed_methods = ["GET"]
       allowed_origins = ["*"]
     }
-  }
+  ]
+}
 ```
 
 * Model of variable bucket_lifecycles
 ```hcl
 variable "bucket_lifecycles" {
-  default = {
-    lifecycle1 = {
+  description = "Define the configurations lifecicles to bucket"
+  type = list(object({
+    id_name = string
+    status = string
+    filter = optional(string)
+    data_expiration = optional(number)
+    versions_transitions = optional(list(object({
+      after_days = number
+      move_to    = string
+    })))
+  }))
+  default = [
+    {
       id_name         = "tf-test-lifecycle"
       status          = "Enabled"
       data_expiration = 90
@@ -173,7 +200,7 @@ variable "bucket_lifecycles" {
         }
       ]
     },
-    lifecycle2 = {
+    {
       id_name = "tf-test-lifecycle2"
       status  = "Enabled"
       versions_transitions = [
@@ -187,7 +214,7 @@ variable "bucket_lifecycles" {
         }
       ]
     }
-  }
+  ]
 }
 ```
 
