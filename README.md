@@ -178,10 +178,10 @@ variable "bucket_lifecycles" {
     status = string
     filter = optional(string)
     data_expiration = optional(number)
-    versions_transitions = optional(list(object({
+    versions_transitions = list(object({
       after_days = number
       move_to    = string
-    })))
+    }))
   }))
   default = [
     {

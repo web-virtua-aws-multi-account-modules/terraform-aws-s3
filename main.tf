@@ -94,14 +94,14 @@ resource "aws_s3_bucket_lifecycle_configuration" "create_bucket_lifecycle_config
       }
 
       dynamic "noncurrent_version_expiration" {
-        for_each = try(rule.value.data_expiration, null) != null ? [1] : []
+        for_each = try(rule.value.data_expiration, []) != null ? [1] : []
         content {
           noncurrent_days = rule.value.data_expiration
         }
       }
 
       dynamic "filter" {
-        for_each = try(rule.value.filter, null) != null ? [1] : []
+        for_each = try(rule.value.filter, []) != null ? [1] : []
         content {
           prefix = rule.value.filter
         }
