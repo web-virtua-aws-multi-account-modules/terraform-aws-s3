@@ -48,7 +48,7 @@ resource "aws_s3_bucket_cors_configuration" "create_bucket_cors_configuration" {
 }
 
 resource "aws_s3_bucket_website_configuration" "create_bucket_website_configuration" {
-  count  = (var.cors_rules != null && var.static_site != null) ? 1 : 0
+  count  = var.static_site != null ? 1 : 0
   bucket = aws_s3_bucket.create_bucket.id
 
   index_document {
