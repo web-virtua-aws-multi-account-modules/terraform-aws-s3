@@ -28,8 +28,9 @@ variable "force_destroy" {
 }
 
 variable "ou_name" {
-  type    = string
-  default = "no"
+  description = "Organization unit name"
+  type        = string
+  default     = "no"
 }
 
 variable "tags" {
@@ -46,7 +47,7 @@ variable "static_site" {
     key_prefix_equals       = string
     replace_key_prefix_with = string
   })
-  default     = null
+  default = null
 }
 
 variable "cors_rules" {
@@ -55,7 +56,7 @@ variable "cors_rules" {
     allowed_methods = list(string)
     allowed_origins = list(string)
     allowed_headers = optional(list(string))
-    expose_headers = optional(list(string))
+    expose_headers  = optional(list(string))
     max_age_seconds = optional(number, null) # opcional setar um número, senão por default será null
   }))
   default = null
@@ -64,9 +65,9 @@ variable "cors_rules" {
 variable "bucket_lifecycles" {
   description = "Define the configurations lifecicles to bucket"
   type = list(object({
-    id_name = string
-    status = string
-    filter = optional(string)
+    id_name         = string
+    status          = string
+    filter          = optional(string)
     data_expiration = optional(number)
     versions_transitions = list(object({
       after_days = number

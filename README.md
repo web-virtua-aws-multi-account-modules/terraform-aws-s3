@@ -111,7 +111,7 @@ module "bucket_lifecycle_test" {
 ## Variables
 
 | Name | Type | Default | Required | Description | Options |
-|------|-------------|------|---------|:--------:|:--------:|
+|------|-------------|------|---------|:--------:|:--------|
 | bucket_name | `string` | `-` | yes | Name to bucket s3 | `-` |
 | acl_type | `string` | `null` | no | Type of ACL | `*`private<br> `*`public-read<br> `*`public-read-write<br>  `*`authenticated-read<br> `*`aws-exec-read<br> `*`log-delivery-write |
 | policy | `string` | `null` | no | Policy of ACL | `-` |
