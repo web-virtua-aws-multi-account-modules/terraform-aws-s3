@@ -63,7 +63,6 @@ module "s3_bucket" {
   versioning = {
     enabled = true
   }
-
 }
 ```
 
@@ -71,7 +70,7 @@ module "s3_bucket" {
 
 ```hcl
 module "bucket_static_site_test" {
-  source      = "./create-bucket"
+  source      = "terraform-aws-modules/s3-bucket/aws"
   bucket_name = "tf-static-site-test"
   acl_type    = "public-read"
   versioning  = "Enabled"
@@ -94,7 +93,7 @@ module "bucket_static_site_test" {
 
 ```hcl
 module "bucket_lifecycle_test" {
-  source      = "./create-bucket"
+  source      = "terraform-aws-modules/s3-bucket/aws"
   bucket_name = "tf-lifecycle-test"
   acl_type    = "private"
   versioning  = "Enabled"

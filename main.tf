@@ -20,18 +20,21 @@ resource "aws_s3_bucket_versioning" "create_bucket_versioning" {
 
 resource "aws_s3_bucket_policy" "create_bucket_policy" {
   count  = var.policy != null ? 1 : 0
+
   bucket = aws_s3_bucket.create_bucket.id
   policy = var.policy
 }
 
 resource "aws_s3_bucket_acl" "create_bucket_acl" {
   count  = var.acl_type != null ? 1 : 0
+
   bucket = aws_s3_bucket.create_bucket.bucket
   acl    = var.acl_type
 }
 
 resource "aws_s3_bucket_cors_configuration" "create_bucket_cors_configuration" {
   count  = var.cors_rules != null ? 1 : 0
+
   bucket = aws_s3_bucket.create_bucket.id
 
   dynamic "cors_rule" {
@@ -49,6 +52,7 @@ resource "aws_s3_bucket_cors_configuration" "create_bucket_cors_configuration" {
 
 resource "aws_s3_bucket_website_configuration" "create_bucket_website_configuration" {
   count  = var.static_site != null ? 1 : 0
+
   bucket = aws_s3_bucket.create_bucket.id
 
   index_document {
@@ -77,6 +81,7 @@ resource "aws_s3_bucket_website_configuration" "create_bucket_website_configurat
 
 resource "aws_s3_bucket_lifecycle_configuration" "create_bucket_lifecycle_configuration" {
   count  = var.bucket_lifecycles != null ? 1 : 0
+
   bucket = aws_s3_bucket.create_bucket.id
 
   dynamic "rule" {

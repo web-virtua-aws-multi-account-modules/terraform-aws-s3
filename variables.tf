@@ -11,7 +11,7 @@ variable "acl_type" {
 
 variable "policy" {
   description = "Policy to bucket"
-  type        = string
+  type        = any
   default     = null
 }
 
