@@ -47,6 +47,8 @@ provider "aws" {
 - Policy
 - ACL
 - Lifecycle configuration
+- Bucket ownership controls
+- Bucket public access block
 
 ## Usage exemples
 
@@ -112,6 +114,8 @@ module "bucket_lifecycle_test" {
 | Name | Type | Default | Required | Description | Options |
 |------|-------------|------|---------|:--------:|:--------|
 | bucket_name | `string` | `-` | yes | Name to bucket s3 | `-` |
+| object_ownership | `string` | `BucketOwnerPreferred` | no | Object ownership can be BucketOwnerPreferred or ObjectWriter | `*`BucketOwnerPreferred <br> `*`ObjectWriter |
+| bucket_access_types | `object` | `-` | no | Manages S3 bucket-level Public Access Block configuration | `-` |
 | acl_type | `string` | `null` | no | Type of ACL | `*`private<br> `*`public-read<br> `*`public-read-write<br>  `*`authenticated-read<br> `*`aws-exec-read<br> `*`log-delivery-write |
 | policy | `string` | `null` | no | Policy of ACL | `-` |
 | versioning | `string` | `Disabled` | no | Versioning to bucket | `*`Enabled<br> `*`Suspended<br> `*`Disabled |
@@ -217,6 +221,25 @@ variable "bucket_lifecycles" {
 }
 ```
 
+* Model of variable bucket_access_types
+```hcl
+variable "bucket_access_types" {
+  description = "Manages S3 bucket-level Public Access Block configuration"
+  type = object({
+    block_public_acls       = optional(bool, false)
+    block_public_policy     = optional(bool, false)
+    ignore_public_acls      = optional(bool, false)
+    restrict_public_buckets = optional(bool, false)
+  })
+  default = {
+    block_public_acls       = false
+    block_public_policy     = false
+    ignore_public_acls      = false
+    restrict_public_buckets = false
+  }
+}
+```
+
 ## Resources
 
 | Name | Type |
@@ -228,6 +251,8 @@ variable "bucket_lifecycles" {
 | [aws_s3_bucket_cors_configuration.create_bucket_cors_configuration](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_cors_configuration) | resource |
 | [aws_s3_bucket_website_configuration.create_bucket_website_configuration](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_website_configuration) | resource |
 | [aws_s3_bucket_lifecycle_configuration.create_bucket_lifecycle_configuration](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/s3_bucket_lifecycle_configuration) | resource |
+| [aws_s3_bucket_ownership_controls.create_ownership_controls](https://registry.terraform.io/providers/hashicorp/aws/3.29.1/docs/resources/s3_bucket_ownership_controls) | resource |
+| [aws_s3_bucket_public_access_block.create_public_access_block](https://registry.terraform.io/providers/hashicorp/aws/3.16.0/docs/resources/s3_bucket_public_access_block) | resource |
 
 ## Outputs
 
@@ -236,3 +261,11 @@ variable "bucket_lifecycles" {
 | `bucket` | All informations of the bucket |
 | `bucket_arn` | The ARN of the bucket |
 | `bucket_name` | The name of the bucket |
+| `bucket_versioning` | Bucket versioning |
+| `bucket_policy` | Bucket policy |
+| `ownership_controls` | Ownership controls |
+| `access_block` | Access block |
+| `bucket_acl` | Bucket ACL |
+| `cors_configuration` | Cors configuration |
+| `website_configuration` | Website configuration |
+| `lifecycle_configuration` | Lifecycle configuration |

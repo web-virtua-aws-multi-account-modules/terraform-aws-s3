@@ -19,21 +19,44 @@ resource "aws_s3_bucket_versioning" "create_bucket_versioning" {
 }
 
 resource "aws_s3_bucket_policy" "create_bucket_policy" {
-  count  = var.policy != null ? 1 : 0
+  count = var.policy != null ? 1 : 0
 
   bucket = aws_s3_bucket.create_bucket.id
   policy = var.policy
 }
 
-resource "aws_s3_bucket_acl" "create_bucket_acl" {
-  count  = var.acl_type != null ? 1 : 0
+####################
+resource "aws_s3_bucket_ownership_controls" "create_ownership_controls" {
+  bucket = aws_s3_bucket.create_bucket.id
 
-  bucket = aws_s3_bucket.create_bucket.bucket
-  acl    = var.acl_type
+  rule {
+    object_ownership = var.object_ownership
+  }
 }
 
+resource "aws_s3_bucket_public_access_block" "create_public_access_block" {
+  bucket                  = aws_s3_bucket.create_bucket.id
+  block_public_acls       = var.bucket_access_types.block_public_acls
+  block_public_policy     = var.bucket_access_types.block_public_policy
+  ignore_public_acls      = var.bucket_access_types.ignore_public_acls
+  restrict_public_buckets = var.bucket_access_types.restrict_public_buckets
+}
+
+resource "aws_s3_bucket_acl" "create_bucket_acl" {
+  count = var.acl_type != null ? 1 : 0
+
+  bucket = aws_s3_bucket.create_bucket.id
+  acl    = var.acl_type
+
+  depends_on = [
+    aws_s3_bucket_ownership_controls.create_ownership_controls,
+    aws_s3_bucket_public_access_block.create_public_access_block
+  ]
+}
+####################
+
 resource "aws_s3_bucket_cors_configuration" "create_bucket_cors_configuration" {
-  count  = var.cors_rules != null ? 1 : 0
+  count = var.cors_rules != null ? 1 : 0
 
   bucket = aws_s3_bucket.create_bucket.id
 
@@ -51,7 +74,7 @@ resource "aws_s3_bucket_cors_configuration" "create_bucket_cors_configuration" {
 }
 
 resource "aws_s3_bucket_website_configuration" "create_bucket_website_configuration" {
-  count  = var.static_site != null ? 1 : 0
+  count = var.static_site != null ? 1 : 0
 
   bucket = aws_s3_bucket.create_bucket.id
 
@@ -80,7 +103,7 @@ resource "aws_s3_bucket_website_configuration" "create_bucket_website_configurat
 }
 
 resource "aws_s3_bucket_lifecycle_configuration" "create_bucket_lifecycle_configuration" {
-  count  = var.bucket_lifecycles != null ? 1 : 0
+  count = var.bucket_lifecycles != null ? 1 : 0
 
   bucket = aws_s3_bucket.create_bucket.id
 

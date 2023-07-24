@@ -9,6 +9,28 @@ variable "acl_type" {
   default     = null
 }
 
+variable "object_ownership" {
+  description = "Object ownership can be BucketOwnerPreferred or ObjectWriter"
+  type        = string
+  default     = "BucketOwnerPreferred"
+}
+
+variable "bucket_access_types" {
+  description = "Manages S3 bucket-level Public Access Block configuration"
+  type = object({
+    block_public_acls       = optional(bool, false)
+    block_public_policy     = optional(bool, false)
+    ignore_public_acls      = optional(bool, false)
+    restrict_public_buckets = optional(bool, false)
+  })
+  default = {
+    block_public_acls       = false
+    block_public_policy     = false
+    ignore_public_acls      = false
+    restrict_public_buckets = false
+  }
+}
+
 variable "policy" {
   description = "Policy to bucket"
   type        = any
