@@ -57,7 +57,7 @@ provider "aws" {
 
 ```hcl
 module "s3_bucket" {
-  source = "terraform-aws-modules/s3-bucket/aws"
+  source = "web-virtua-aws-multi-account-modules/s3/aws"
 
   bucket = "my-s3-bucket"
   acl    = "private"
@@ -72,7 +72,7 @@ module "s3_bucket" {
 
 ```hcl
 module "bucket_static_site_test" {
-  source      = "terraform-aws-modules/s3-bucket/aws"
+  source      = "web-virtua-aws-multi-account-modules/s3/aws"
   bucket_name = "tf-static-site-test"
   acl_type    = "public-read"
   versioning  = "Enabled"
@@ -95,7 +95,7 @@ module "bucket_static_site_test" {
 
 ```hcl
 module "bucket_lifecycle_test" {
-  source      = "terraform-aws-modules/s3-bucket/aws"
+  source      = "web-virtua-aws-multi-account-modules/s3/aws"
   bucket_name = "tf-lifecycle-test"
   acl_type    = "private"
   versioning  = "Enabled"
